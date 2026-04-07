@@ -1,0 +1,19 @@
+meta {
+  name: "OxidationShort"
+  type: http
+  seq: 16
+}
+
+post {
+  url: "{{base_url}}/api/oxidationshort"
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+"fatty_acid_mz":255.233,"fatty_acid_tolerance":10.0,"fatty_acid_tolerance_mode":"ppm","precursor_mz_negative":638.3675,"precursor_tolerance":10.0,"precursor_tolerance_mode":"ppm","oxidations":["allOxidations"]
+}

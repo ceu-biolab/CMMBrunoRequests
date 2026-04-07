@@ -1,0 +1,34 @@
+meta {
+  name: "batch_mz_cors_proxy"
+  type: http
+  seq: 41
+}
+
+post {
+  url: "{{base_url}}/api/v3/batch"
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+"metabolites_type": "all-except-peptides",
+    "databases": [
+        "all-except-mine"
+    ],
+    "masses_mode": "mz",
+    "ion_mode": "negative",
+    "adducts": [
+        "M-H",
+        "M-2H"
+    ],
+    "tolerance": 10.0,
+    "tolerance_mode": "ppm",
+    "masses": [
+        400.3432,
+        422.32336
+    ]
+}

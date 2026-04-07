@@ -1,0 +1,19 @@
+meta {
+  name: "OxidationLong"
+  type: http
+  seq: 15
+}
+
+post {
+  url: "{{base_url}}/api/oxidationlong"
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+"fatty_acid_1_mz":319.2285,"fatty_acid_2_mz":255.233,"fatty_acid_tolerance":10.0,"fatty_acid_tolerance_mode":"ppm","precursor_mz_negative":842.5572,"precursor_tolerance":10.0,"precursor_tolerance_mode":"ppm","oxidations":["allOxidations"]
+}

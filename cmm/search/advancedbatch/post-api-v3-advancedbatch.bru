@@ -1,0 +1,34 @@
+meta {
+  name: "CMM test"
+  type: http
+  seq: 35
+}
+
+post {
+  url: "{{base_url}}/api/v3/advancedbatch"
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+"chemical_alphabet": "all",
+	"modifiers_type": "none",
+	"metabolites_type": "all-except-peptides",
+	"databases": ["hmdb"],
+	"masses_mode": "mz",
+	"ion_mode": "positive",
+	"adducts": ["all"],
+	"deuterium": false,
+	"tolerance": 10.0,
+	"tolerance_mode": "ppm",
+	"masses": [399.3367, 421.31686, 315.2424, 337.2234, 280.2402],
+	"all_masses": [],
+	"retention_times": [18.842525, 18.842525, 8.144917, 8.144917, 28.269503, 4.021555],
+	"all_retention_times": [],
+	"composite_spectra": [],
+	"all_composite_spectra": []
+}

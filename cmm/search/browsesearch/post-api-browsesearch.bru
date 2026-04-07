@@ -1,0 +1,26 @@
+meta {
+  name: "browseSearch / browseSearch LOCAL"
+  type: http
+  seq: 1
+}
+
+post {
+  url: "{{base_url}}/api/browsesearch"
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+"name": "choline",
+    "exactName": false,
+    "formula": "C5H14NO",
+    "exactFormula": false,
+    "databases": [
+        "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides"
+}

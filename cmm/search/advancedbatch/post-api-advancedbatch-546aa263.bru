@@ -1,0 +1,19 @@
+meta {
+  name: "HMDB_JSON mz v2"
+  type: http
+  seq: 38
+}
+
+post {
+  url: "{{base_url}}/api/advancedbatch"
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+"chemical_alphabet":"all","modifiers_type":"none","metabolites_type":"all-except-peptides","databases":["hmdb"],"masses_mode":"mz","ion_mode":"positive","adducts":["M+H","M+NH4","M+Na","M+K","M+2H"],"deuterium":false,"tolerance":10.0,"tolerance_mode":"ppm","masses":[400.3432,422.32336,316.24945,338.2299,281.24765,288.2174],"all_masses":[],"retention_times":[18.842525,18.842525,8.144917,8.144917,28.269503,4.021555],"all_retention_times":[],"composite_spectra":[[{"mz":400.3432,"intensity":307034.88},{"mz":401.34576,"intensity":73205.016},{"mz":402.3504,"intensity":15871.166},{"mz":403.35446,"intensity":2379.5325},{"mz":404.3498,"intensity":525.92053}],[{"mz":422.32336,"intensity":1562.7301},{"mz":423.3237,"intensity":564.0795},{"mz":424.33255,"intensity":292.2923}],[{"mz":631.4875,"intensity":367.90726},{"mz":632.4899,"intensity":261.73},{"mz":316.24945,"intensity":569921.25},{"mz":317.2518,"intensity":100396.53},{"mz":318.25354,"intensity":13153.248},{"mz":319.2558,"intensity":1834.3552},{"mz":320.25305,"intensity":241.56665},{"mz":338.2299,"intensity":1832.6085},{"mz":339.2322,"intensity":468.8131}],[{"mz":338.2299,"intensity":1832.6085},{"mz":339.2322,"intensity":468.8131}],[{"mz":561.4858,"intensity":236.35},{"mz":141.1306,"intensity":297.12},{"mz":281.24765,"intensity":8532.774},{"mz":263.23685,"intensity":2734.8223},{"mz":264.24228,"intensity":616.6557},{"mz":265.2474,"intensity":97.63},{"mz":303.2296,"intensity":3154.6785},{"mz":304.2393,"intensity":718.22534},{"mz":305.23438,"intensity":272.0783}],[{"mz":575.422,"intensity":339.64},{"mz":288.2174,"intensity":204084.69},{"mz":289.22003,"intensity":32914.242},{"mz":290.22226,"intensity":5089.2285},{"mz":291.2198,"intensity":723.9824},{"mz":292.2142,"intensity":86.07},{"mz":310.19937,"intensity":1059.77},{"mz":311.20145,"intensity":400.03336}]],"all_composite_spectra":[]
+}
