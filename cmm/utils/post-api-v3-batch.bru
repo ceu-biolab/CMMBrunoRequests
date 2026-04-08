@@ -1,5 +1,5 @@
 meta {
-  name: "batch_mz"
+  name: batch_mz
   type: http
   seq: 40
 }
@@ -15,12 +15,14 @@ headers {
 }
 
 body:json {
-"metabolites_type": "all-except-peptides",
-	"databases": ["all-except-mine"],
-	"masses_mode": "mz",
-	"ion_mode": "negative",
-	"adducts": ["M-H", "M-2H", "M-H-H2O", "M-H+HCOONa", "M+Na-2H", "M+Cl"],
-	"tolerance": 10.0,
-	"tolerance_mode": "ppm",
-	"masses": [400.3432, 422.32336, 316.24945, 338.2299, 281.24765, 288.2174]
+  {
+    "metabolites_type": "all-except-peptides",
+    "databases": ["all-except-mine"],
+    "masses_mode": "mz",
+    "ion_mode": "negative",
+    "adducts": ["M-H", "M-2H", "M-H-H2O", "M-H+HCOONa", "M+Na-2H", "M+Cl"],
+    "tolerance": 10.0,
+    "tolerance_mode": "ppm",
+    "masses": [400.3432, 422.32336, 316.24945, 338.2299, 281.24765, 288.2174]
+  }
 }

@@ -1,5 +1,5 @@
 meta {
-  name: "LC-MS-Search"
+  name: LC-MS-Search
   type: http
   seq: 24
 }
@@ -15,11 +15,12 @@ headers {
 }
 
 body:json {
-"mzValues": [
-        400.3432, 281.24765
+  {
+    "mzValues": [
+    400.3432, 281.24765
     ],
     "ccsValues": [
-        202.881, 178.546
+    202.881, 178.546
     ],
     "mzToleranceMode": "PPM",
     "mzTolerance": 10,
@@ -29,4 +30,5 @@ body:json {
     "bufferGas": "N2",
     "adducts": ["[M+H]+"],
     "formulaType": "CHNOPS"
+  }
 }

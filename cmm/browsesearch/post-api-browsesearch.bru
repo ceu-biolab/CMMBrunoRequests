@@ -1,5 +1,5 @@
 meta {
-  name: "browseSearch / browseSearch LOCAL"
+  name: browseSearch / browseSearch LOCAL
   type: http
   seq: 1
 }
@@ -15,12 +15,14 @@ headers {
 }
 
 body:json {
-"name": "choline",
+  {
+    "name": "choline",
     "exactName": false,
     "formula": "C5H14NO",
     "exactFormula": false,
     "databases": [
-        "all-except-mine"
+    "all-except-mine"
     ],
     "metabolites_type": "all-except-peptides"
+  }
 }

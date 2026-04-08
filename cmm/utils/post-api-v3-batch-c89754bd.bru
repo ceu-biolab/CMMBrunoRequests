@@ -1,5 +1,5 @@
 meta {
-  name: "batch_mz_cors_proxy"
+  name: batch_mz_cors_proxy
   type: http
   seq: 41
 }
@@ -15,20 +15,22 @@ headers {
 }
 
 body:json {
-"metabolites_type": "all-except-peptides",
+  {
+    "metabolites_type": "all-except-peptides",
     "databases": [
-        "all-except-mine"
+    "all-except-mine"
     ],
     "masses_mode": "mz",
     "ion_mode": "negative",
     "adducts": [
-        "M-H",
-        "M-2H"
+    "M-H",
+    "M-2H"
     ],
     "tolerance": 10.0,
     "tolerance_mode": "ppm",
     "masses": [
-        400.3432,
-        422.32336
+    400.3432,
+    422.32336
     ]
+  }
 }
