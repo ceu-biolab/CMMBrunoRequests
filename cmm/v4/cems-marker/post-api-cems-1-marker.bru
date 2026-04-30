@@ -1,0 +1,55 @@
+meta {
+  name: CE-MS 1 Marker
+  type: http
+  seq: 28
+}
+
+post {
+  url: {{base_url}}/api/cems-1-marker
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+{
+    "masses": [
+      291.1299,
+      298.098,
+      308.094,
+      316.2488,
+      55.055
+    ],
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "mt": [
+      11.56,
+      13.65,
+      15.62,
+      12.59,
+      6.99
+    ],
+    "mt_tolerance": 10,
+    "mt_tolerance_mode": "percentage",
+    "buffer": "FORMIC_ACID_1M",
+    "temperature": 20,
+    "polarity": "Direct",
+    "marker": "L-Methionine sulfone",
+    "marker_time": 14.24,
+    "capillary_length": 1000,
+    "capillary_voltage": 30,
+    "chemical_alphabet": "CHNOPS",
+    "ion_mode": "positive",
+    "adducts": [
+      "[M+H]+",
+      "[M+2H]2+",
+      "[M+Na]+",
+      "[M+K]+",
+      "[M+NH4]+",
+      "[M+H-H2O]+"
+    ]
+  }
+}

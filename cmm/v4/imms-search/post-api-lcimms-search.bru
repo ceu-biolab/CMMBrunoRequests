@@ -1,0 +1,45 @@
+meta {
+  name: LC-IM-MS Search
+  type: http
+  seq: 25
+}
+
+post {
+  url: {{base_url}}/api/lcimms-search
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "mzValues": [
+    790.63203,
+    782.56943
+    ],
+    "ccsValues": [
+    291.175,
+    294.385
+    ],
+    "rtValues": [
+    6.0,
+    5.0
+    ],
+    "mzToleranceMode": "PPM",
+    "mzTolerance": 5,
+    "ccsToleranceMode": "PERCENTAGE",
+    "ccsTolerance": 1.5,
+    "ionizationMode": "POSITIVE",
+    "bufferGas": "N2",
+    "adducts": [
+    "[M+H]+"
+    ],
+    "formulaType": "CHNOPS",
+    "experimentParameters": {
+    "ionMode": "POSITIVE",
+    "modifierType": "NONE"
+  }
+}

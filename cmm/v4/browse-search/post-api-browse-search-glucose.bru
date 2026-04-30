@@ -1,0 +1,27 @@
+meta {
+  name: Browse Search (Glucose)
+  type: http
+  seq: 23
+}
+
+post {
+  url: {{base_url}}/api/browse-search
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+{
+    "compoundName": "glucose",
+    "formula": "C6H12O6",
+    "databases": [
+      "ALL"
+    ],
+    "metaboliteType": "ALL",
+    "exactName": false
+  }
+}
