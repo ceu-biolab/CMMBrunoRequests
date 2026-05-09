@@ -1,0 +1,41 @@
+meta {
+  name: PC positive features - scored against TG (low score expected)
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/rule-puntuation
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "features": [
+      { "mzValue": 758.5695, "intensity": 1000.0, "retentionTime": 5.2 },
+      { "mzValue": 780.5514, "intensity": 500.0,  "retentionTime": 5.2 },
+      { "mzValue": 796.5254, "intensity": 100.0,  "retentionTime": 5.2 }
+    ],
+    "mobilePhases": ["CH3COO"],
+    "toleranceMode": "PPM",
+    "ruleTarget": "TG",
+    "ionizationMode": "POSITIVE"
+  }
+}
+
+tests {
+  test("HTTP 200", () => {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("bestResult exists", () => {
+    expect(res.getBody().bestResult).to.not.be.null;
+  });
+  test("score is low (PC pattern does not match TG rules)", () => {
+    expect(res.getBody().bestResult.score).to.be.at.most(0);
+  });
+}

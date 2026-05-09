@@ -1,0 +1,42 @@
+meta {
+  name: PC - Negative
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/rule-puntuation
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "features": [
+      { "mzValue": 816.5755, "intensity": 1000.0, "retentionTime": 5.2 },
+      { "mzValue": 898.5784, "intensity": 500.0,  "retentionTime": 5.2 },
+      { "mzValue": 980.5813, "intensity": 200.0,  "retentionTime": 5.2 },
+      { "mzValue": 792.5316, "intensity": 80.0,   "retentionTime": 5.2 }
+    ],
+    "mobilePhases": ["CH3COO", "HCOO"],
+    "toleranceMode": "PPM",
+    "ruleTarget": "PC",
+    "ionizationMode": "NEGATIVE"
+  }
+}
+
+tests {
+  test("HTTP 200", () => {
+    expect(res.getStatus()).to.equal(200);
+  });
+  test("bestResult exists", () => {
+    expect(res.getBody().bestResult).to.not.be.null;
+  });
+  test("score is positive", () => {
+    expect(res.getBody().bestResult.score).to.be.greaterThan(0);
+  });
+}
