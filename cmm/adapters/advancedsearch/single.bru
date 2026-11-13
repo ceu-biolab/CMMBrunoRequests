@@ -1,0 +1,52 @@
+meta {
+  name: Legacy advanced single without spectrum
+  type: http
+  seq: 165
+}
+
+post {
+  url: {{base_url}}/api/advancedsearch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "mass": 181.070664,
+    "retention_time": 2,
+    "chemical_alphabet": "CHNOPS",
+    "deuterium": false,
+    "modifiers_type": "none",
+    "composite_spectrum": []
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyAdvanced
+}
+
+assert {
+  res.status: eq 200
+  res.body.results: isNotEmpty
+}

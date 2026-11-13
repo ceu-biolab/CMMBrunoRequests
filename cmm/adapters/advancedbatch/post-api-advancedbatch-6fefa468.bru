@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "masses": [
       399.3367,
       421.31686,
@@ -1137,4 +1137,17 @@ body:json {
       "M+H-H2O"
     ]
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyAdvanced
+}
+
+assert {
+  res.status: eq 200
 }

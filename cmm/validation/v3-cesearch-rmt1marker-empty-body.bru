@@ -1,0 +1,33 @@
+meta {
+  name: v3-cesearch-rmt1marker: empty payload
+  type: http
+  seq: 202
+}
+
+post {
+  url: {{base_url}}/api/v3/cesearch/rmt1marker
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

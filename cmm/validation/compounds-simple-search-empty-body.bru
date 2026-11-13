@@ -1,0 +1,33 @@
+meta {
+  name: compounds-simple-search: empty payload
+  type: http
+  seq: 183
+}
+
+post {
+  url: {{base_url}}/api/compounds/simple-search
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

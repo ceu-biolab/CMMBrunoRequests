@@ -1,0 +1,25 @@
+meta {
+  name: CE-MS options
+  type: http
+  seq: 160
+}
+
+get {
+  url: {{base_url}}/api/metadata/ce-ms-options
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: ceOptions
+}
+
+assert {
+  res.status: eq 200
+  res.body.conditions: isNotEmpty
+}

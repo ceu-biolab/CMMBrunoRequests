@@ -10,6 +10,16 @@ get {
   auth: none
 }
 
+
+settings {
+  timeout: 60000
+}
+
 vars:pre-request {
-  base_url: ceumassdev.eps.uspceu.es
+  base_url: https://ceumassdev.eps.uspceu.es
+  cmm_response_contract: adducts
+}
+
+assert {
+  res.status: eq 200
 }

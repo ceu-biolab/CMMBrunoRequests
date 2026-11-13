@@ -1,0 +1,97 @@
+meta {
+  name: LC-MS/MS single feature
+  type: http
+  seq: 210
+}
+
+post {
+  url: {{base_url}}/api/lcmsms-search
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "CIDEnergy": "HIGH",
+    "precursorIonMZ": 132.101905,
+    "tolerancePrecursorIon": 10.0,
+    "toleranceModePrecursorIon": "PPM",
+    "toleranceFragments": 100.0,
+    "toleranceModeFragments": "MDA",
+    "ionizationMode": "POSITIVE",
+    "adducts": [
+      "[M+H]+"
+    ],
+    "fragmentsMZsIntensities": {
+      "peaks": [
+        {
+          "mz": 41.305,
+          "intensity": 100.0
+        },
+        {
+          "mz": 44.161,
+          "intensity": 64.873
+        },
+        {
+          "mz": 45.378,
+          "intensity": 17.722
+        },
+        {
+          "mz": 55.961,
+          "intensity": 44.937
+        },
+        {
+          "mz": 57.303,
+          "intensity": 42.089
+        },
+        {
+          "mz": 58.388,
+          "intensity": 10.206
+        },
+        {
+          "mz": 69.072,
+          "intensity": 33.544
+        },
+        {
+          "mz": 85.977,
+          "intensity": 43.354
+        },
+        {
+          "mz": 132.064,
+          "intensity": 9.494
+        }
+      ]
+    },
+    "scoreType": "COSINE",
+    "spectrumSource": "experimental",
+    "rtValue": 5.2
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: lcmsms
+}
+
+assert {
+  res.status: eq 200
+  res.body.msmsFeatures.length: eq 1
+}
+
+tests {
+  test('Feature values preserve request order', () => {
+    const rows = res.getBody().msmsFeatures;
+    const expectedValues = [132.101905];
+    expect(rows).to.have.lengthOf(expectedValues.length);
+    rows.forEach((row, i) => expect(row.feature.mzValue).to.be.closeTo(expectedValues[i], 0.0000001));
+  });
+}

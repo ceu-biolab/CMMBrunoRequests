@@ -1,0 +1,30 @@
+meta {
+  name: Legacy ClassyFire CHEMONTID prefix
+  type: http
+  seq: 159
+}
+
+get {
+  url: {{base_url}}/api/v3/classyfire/chemontid:0000152
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyClassyfire
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("ClassyFire identifier preserves leading zeroes", () => {
+    expect(res.getBody().node_id).to.equal("0000152");
+  });
+}

@@ -1,0 +1,46 @@
+meta {
+  name: Legacy negative-tolerance
+  type: http
+  seq: 206
+}
+
+post {
+  url: {{base_url}}/api/simplesearch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": -1,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "mass": 181.070664
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

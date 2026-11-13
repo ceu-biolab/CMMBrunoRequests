@@ -1,0 +1,60 @@
+meta {
+  name: Legacy mismatched mass/RT counts
+  type: http
+  seq: 208
+}
+
+post {
+  url: {{base_url}}/api/v3/advancedbatch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "masses": [
+      181.070664,
+      132.101905
+    ],
+    "retention_times": [
+      2
+    ],
+    "composite_spectra": [],
+    "all_masses": [
+      179.056112
+    ],
+    "all_retention_times": [
+      3
+    ],
+    "all_composite_spectra": []
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

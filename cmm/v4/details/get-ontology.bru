@@ -1,0 +1,25 @@
+meta {
+  name: ontology detail
+  type: http
+  seq: 134
+}
+
+get {
+  url: {{base_url}}/api/ontology/7659
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: ontology
+}
+
+assert {
+  res.status: eq 200
+  res.body.ontologyTermId: eq 7659
+}

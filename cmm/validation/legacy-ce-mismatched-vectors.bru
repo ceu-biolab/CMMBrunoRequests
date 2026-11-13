@@ -1,0 +1,60 @@
+meta {
+  name: Legacy CE mismatched vectors
+  type: http
+  seq: 209
+}
+
+post {
+  url: {{base_url}}/api/v3/cesearch/effmob
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "masses": [
+      291.1299,
+      298.098,
+      308.094,
+      316.2488,
+      55.055
+    ],
+    "buffer": "formic-acid-1m-20c",
+    "polarity": "direct",
+    "chemical_alphabet": "CHNOPS",
+    "effective_mobilities": [
+      1174
+    ],
+    "eff_mob_tolerance": 10,
+    "eff_mob_tolerance_mode": "percentage"
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

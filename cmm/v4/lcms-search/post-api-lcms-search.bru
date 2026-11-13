@@ -236,3 +236,26 @@ body:json {
     "modifiersType": "none"
   }
 }
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: lcms
+}
+
+assert {
+  res.status: eq 200
+  res.body.length: eq 21
+}
+
+tests {
+  test('Feature values preserve request order', () => {
+    const rows = res.getBody();
+    const expectedValues = [400.3432,422.32336,316.24945,338.2299,281.24765,288.2174,496.3427,518.3226,548.37054,572.3718,570.3551,568.3401,590.321,482.324,478.29312,500.27457,502.29303,526.2927,548.27484,512.33417,534.31616];
+    expect(rows).to.have.lengthOf(expectedValues.length);
+    rows.forEach((row, i) => expect(row.feature.mzValue).to.be.closeTo(expectedValues[i], 0.0000001));
+  });
+}

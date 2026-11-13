@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "ion_mass": 287.236,
     "ms_ms_peaks": [
       {
@@ -189,4 +189,17 @@ body:json {
       "experimental"
     ]
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyMsms
+}
+
+assert {
+  res.status: eq 200
 }

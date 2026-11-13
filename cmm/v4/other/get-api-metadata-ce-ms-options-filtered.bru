@@ -1,0 +1,29 @@
+meta {
+  name: CE-MS options with filters
+  type: http
+  seq: 161
+}
+
+get {
+  url: {{base_url}}/api/metadata/ce-ms-options?buffer=FORMIC_ACID_1M&temperature=20&polarity=Direct&ionization_mode=Positive
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: ceOptions
+}
+
+assert {
+  res.status: eq 200
+  res.body.conditions: isNotEmpty
+  res.body.conditions[0].buffer.code: eq FORMIC_ACID_1M
+  res.body.conditions[0].temperature: eq 20
+  res.body.conditions[0].polarity: eq Direct
+  res.body.conditions[0].ionizationMode: eq Positive
+}

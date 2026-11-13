@@ -1,0 +1,54 @@
+meta {
+  name: Modern MS without matches
+  type: http
+  seq: 212
+}
+
+post {
+  url: {{base_url}}/api/compounds/simple-search
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "mz": 1.1,
+    "mzToleranceMode": "PPM",
+    "tolerance": 10,
+    "ionizationMode": "POSITIVE",
+    "adductsString": [
+      "[M+H]+"
+    ],
+    "databases": [
+      "HMDB",
+      "LIPIDMAPS",
+      "ASPERGILLUS",
+      "FAHFA",
+      "KEGG",
+      "INHOUSE",
+      "CHEBI",
+      "PUBCHEM",
+      "NPATLAS"
+    ],
+    "metaboliteType": "ALL"
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: ms
+}
+
+assert {
+  res.status: eq 200
+  res.body.msfeatures[0].annotationsByAdducts[0].annotations: isEmpty
+}

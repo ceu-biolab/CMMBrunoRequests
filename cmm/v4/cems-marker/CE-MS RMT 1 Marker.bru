@@ -1,0 +1,77 @@
+meta {
+  name: CE-MS RMT 1 Marker
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{base_url}}/api/cems-rmt-1-marker
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "masses": [
+          291.1299,
+          298.098,
+          308.094,
+          316.2488,
+          55.055
+      ],
+      "tolerance": 10,
+      "tolerance_mode": "ppm",
+      "rmt": [
+          0.85,
+          0.86,
+          1.07,
+          0.93,
+          0.42
+      ],
+      "rmt_tolerance": 10,
+      "rmt_tolerance_mode": "percentage",
+      "buffer": "FORMIC_ACID_1M",
+      "temperature": 20,
+      "polarity": "Direct",
+      "rmt_reference": "L-Methionine sulfone",
+      "marker": "L-Methionine sulfone",
+      "marker_time": 14.24,
+      "capillary_length": 1000,
+      "capillary_voltage": 30,
+      "chemical_alphabet": "CHNOPS",
+      "ion_mode": "positive",
+      "adducts": [
+          "[M+H]+",
+          "[M+2H]2+",
+          "[M+Na]+",
+          "[M+K]+",
+          "[M+NH4]+",
+          "[M+H-H2O]+"
+      ]
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 60000
+}
+
+
+vars:pre-request {
+  cmm_response_contract: ce
+}
+
+assert {
+  res.status: eq 200
+  res.body.ceFeatures.length: eq 5
+}
+
+tests {
+  test('Feature values preserve request order', () => {
+    const rows = res.getBody().ceFeatures;
+    const expectedValues = [291.1299,298.098,308.094,316.2488,55.055];
+    expect(rows).to.have.lengthOf(expectedValues.length);
+    rows.forEach((row, i) => expect(row.feature.mzValue).to.be.closeTo(expectedValues[i], 0.0000001));
+  });
+}

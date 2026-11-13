@@ -9,3 +9,16 @@ get {
   body: none
   auth: none
 }
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: adducts
+}
+
+assert {
+  res.status: eq 200
+}

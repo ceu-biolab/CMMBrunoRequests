@@ -1,0 +1,25 @@
+meta {
+  name: Legacy references detail
+  type: http
+  seq: 152
+}
+
+get {
+  url: {{base_url}}/api/v3/references/1
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyReference
+}
+
+assert {
+  res.status: eq 200
+  res.body.reference_id: eq 1
+}

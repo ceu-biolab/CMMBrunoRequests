@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "features": [
       {
         "feature": {
@@ -105,4 +105,18 @@ body:json {
     ],
     "experimentParameters": null
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: scored
+}
+
+assert {
+  res.status: eq 200
+  res.body.length: eq 2
 }

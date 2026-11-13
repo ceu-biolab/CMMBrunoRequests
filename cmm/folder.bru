@@ -5,3 +5,133 @@ meta {
 vars:pre-request {
   base_url: https://ceumassdev.eps.uspceu.es
 }
+
+tests {
+  const contractName = bru.getRequestVar('cmm_response_contract');
+  if (contractName) {
+    // tv4 is built into Bruno and works in Safe Mode.
+    const tv4 = require('tv4');
+    const str = {type: 'string'};
+    const text = {type: ['string', 'null']};
+    const num = {type: 'number'};
+    const nullableNumber = {type: ['number', 'null']};
+    const int = {type: 'integer'};
+    const nullableInt = {type: ['integer', 'null']};
+    const id = {type: 'integer', minimum: 1};
+    const positive = {type: 'number', minimum: 0, exclusiveMinimum: true};
+    const cosine = {type: ['number', 'null'], minimum: -0.000001, maximum: 1.000001};
+    const arr = items => ({type: 'array', items});
+    const obj = (properties, required = Object.keys(properties)) => ({type: 'object', properties, required});
+    const fields = (names, schema) => Object.fromEntries(names.split(' ').map(name => [name, schema]));
+    const link = obj({id: str, name: text, uri: text});
+    const legacyLink = obj({id: str, name: text});
+    const dateTime = {type: ['string', 'null'], pattern: '^\\d{4}-\\d{2}-\\d{2}T'};
+    const dateOnly = {type: ['string', 'null'], pattern: '^\\d{4}-\\d{2}-\\d{2}$'};
+    const dates = {created: dateTime, lastUpdated: dateTime};
+    const legacyDates = {created: dateOnly, last_updated: dateOnly};
+    const compound = obj({
+      compoundId: id, compoundName: str, formula: text, mass: positive,
+      chargeType: int, chargeNumber: int, formulaType: str, compoundType: str,
+      ...fields('casId inchi inchiKey smiles lipidType biologicalActivity meshNomenclature iupacClassification mol2 keggID lmID hmdbID agilentID inHouseID knapsackID aspergillusWebName', text),
+      ...fields('logP rtPred', nullableNumber),
+      ...fields('numChains numCarbons doubleBonds pcID chebiID aspergillusID npatlasID fahfaID ohPositionID', nullableInt),
+      lipidMapsClassifications: arr(obj(fields('category mainClass subClass classLevel4', text))),
+      pathways: arr(obj({pathwayId: int, pathwayName: text, pathwayMap: text}))
+    });
+    const score = obj({
+      ...fields('ionizationScore adductRelationScore rtScore ccsScore finalScore', nullableNumber)
+    }, []);
+    const feature = obj({mzValue: positive, intensity: nullableNumber, rtValue: nullableNumber,
+      retentionTime: nullableNumber, ccsValue: nullableNumber, effectiveMobility: nullableNumber,
+      relativeMigrationTime: nullableNumber, migrationTime: nullableNumber}, ['mzValue']);
+    const annotation = obj({compound, scores: arr(score), massErrorPpm: nullableNumber});
+    const scoredCompound = obj({...compound.properties, compoundName: text, mass: {type: 'number', minimum: 0}, formulaType: text, pathways: {anyOf: [compound.properties.pathways, {type: 'null'}]}}, compound.required.filter(k => !['keggID', 'lmID', 'hmdbID', 'agilentID', 'pcID', 'chebiID', 'inHouseID', 'aspergillusID', 'knapsackID', 'npatlasID', 'fahfaID', 'ohPositionID', 'aspergillusWebName'].includes(k)));
+    const ceAnnotation = obj({compound, rank: id,
+      ...fields('massErrorPpm mzCalc neutralMassCalc mobilityErrorPct rmtErrorPct relativeMt absoluteMt', nullableNumber)});
+    const annotated = (annotationSchema = annotation, featureSchema = feature) => obj({feature: featureSchema, annotationsByAdducts: arr(obj({adduct: str, annotations: arr(annotationSchema)}))});
+    const spectrum = obj({precursorMz: nullableNumber, peaks: arr(obj({mz: positive, intensity: num}))});
+    const msmsHit = obj({msmsId: id, compound, adduct: str, spectrumSource: str,
+      deltaPpmPrecursorIon: num, msmsCosineScore: cosine, collisionEnergy: nullableNumber, spectrum,
+      scores: arr(score)}, ['msmsId', 'compound', 'adduct', 'spectrumSource', 'deltaPpmPrecursorIon', 'msmsCosineScore', 'collisionEnergy', 'spectrum']);
+    const gcSpectrum = obj({spectrumId: int, spectrum: arr(obj({mzValue: positive, intensity: num}))});
+    const buffer = obj({id, code: str, description: text});
+    const optionCompound = obj({compoundId: id, name: str});
+    const legacyBase = {
+      identifier: id, name: str, formula: text, molecular_weight: positive,
+      ...fields('cas inChiKey kegg_compound kegg_uri hmdb_compound hmdb_uri lipidmaps_compound lipidmaps_uri pubchem_compound pubchem_uri metlin_compound metlin_uri', text),
+      pathways: arr(obj({name: text, uri: text}))
+    };
+    const legacyAnnotation = {...legacyBase, EM: positive, adduct: str, error_ppm: nullableInt, ionizationScore: num, finalScore: num};
+    const legacyCeBase = {id, name: str, formula: text, molecular_weight: positive, error_ppm: nullableInt,
+      ...fields('cas_id hmdb_id hmdb_uri metlin_id metlin_uri lipidmaps_id lipidmaps_uri kegg_id kegg_uri pubchem_id pubchem_uri chebi_id chebi_uri', text),
+      pathways: arr(obj({name: text, uri: text}))};
+    const ceLegacy = mode => {
+      const input = mode === 'effmob' ? 'effmob' : mode === 'rmt' ? 'rmt' : 'mt';
+      const prediction = mode === 'mt' ? 'predicted_mt' : input;
+      return obj({compounds_found: arr(obj({input_mz: positive, [`input_${input}`]: num,
+        annotations: arr(obj({adduct: str, compounds: arr(obj({...legacyCeBase, [prediction]: nullableNumber, [`error_${input}`]: nullableInt}))}))})),
+        fragments: {type: 'array', maxItems: 0}});
+    };
+    const schemas = {
+      compound,
+      compoundDetails: obj({...compound.properties, ...dates,
+        ...fields('reactions classyfireClassification ontologyTerms references organisms', arr(link))}),
+      classyfire: obj({nodeId: {type: 'string', pattern: '^CHEMONTID:\\d{7}$'}, nodeName: text,
+        ...fields('kingdom superClass mainClass subClass level5 level6 level7 level8 level9 level10 directParent', text), ...dates}),
+      ontology: obj({ontologyTermId: id, ...fields('term definition externalId externalSource ontologyComment curator', text), parentId: nullableInt, ontologyLevel: nullableInt, ...dates}),
+      reference: obj({referenceId: id, ...fields('referenceText doi link', text), compounds: arr(link), organisms: arr(link), ...dates}),
+      organism: obj({organismId: id, organismName: text, parentId: nullableInt, organismLevel: nullableInt, ...dates,
+        organismHierarchy: arr(obj({id: str, name: text, level: nullableInt})), compounds: arr(link), references: arr(link)}),
+      ms: obj({msfeatures: arr(annotated())}),
+      ce: obj({ceFeatures: arr(annotated(ceAnnotation, obj({...feature.properties, effectiveMobility: num}, ['mzValue', 'effectiveMobility'])))}),
+      im: obj({imFeatures: arr(annotated(annotation, obj({...feature.properties, ccsValue: positive}, ['mzValue', 'ccsValue'])))}),
+      lcms: arr(annotated()),
+      scored: arr(annotated(obj({...annotation.properties, compound: scoredCompound}))),
+      browse: obj({compoundlist: arr(compound)}),
+      msms: obj({msmsList: arr(msmsHit), experimentalSpectrum: spectrum}),
+      lcmsms: obj({msmsFeatures: arr(obj({feature, msmsList: arr(msmsHit), experimentalSpectrum: spectrum})),
+        msmsList: arr(msmsHit), experimentalSpectrum: spectrum}, ['msmsFeatures']),
+      gcms: obj({gcmsSpectrumExperimental: gcSpectrum, riexperimental: num,
+        gcmsAnnotations: arr(obj({gcmsCompound: obj({...compound.properties, dbRI: num,
+          derivatizationMethod: str, gcColumn: str, gcmsspectrum: arr(gcSpectrum)}), gcmsCosineScore: cosine, experimentalRI: num, deltaRI: num}))}),
+      adducts: obj({positive: {...arr(str), minItems: 1, uniqueItems: true}, negative: {...arr(str), minItems: 1, uniqueItems: true}}),
+      buffers: arr(buffer),
+      ceOptions: obj({conditions: arr(obj({key: str, buffer, temperature: int, polarity: str, ionizationMode: str,
+        markerCompounds: arr(optionCompound), rmtReferenceCompounds: arr(optionCompound)}))}),
+      stats: obj(fields('compounds gcmsSpectra msmsSpectra ccsRecords cemsRecords', {type: 'integer', minimum: 0})),
+      legacyBrowse: obj({results: arr(obj(legacyBase))}),
+      legacyMs: obj({results: arr(obj(legacyAnnotation))}),
+      legacyAdvanced: obj({results: arr(obj({...legacyAnnotation, RT: num, adductRelationScore: num, RTscore: num}))}),
+      legacyMsms: obj({results: arr(obj({spectral_display_tools: text, identifier: id, hmdb_compound: text, hmdb_uri: text, name: str, formula: text, mass: positive, score: cosine}))}),
+      legacyCeEffmob: ceLegacy('effmob'), legacyCeRmt: ceLegacy('rmt'), legacyCeMt: ceLegacy('mt'),
+      legacyCompound: obj({identifier: id, name: str, formula: text, mass: positive, charge_number: int,
+        ...fields('cas_id charge_type kegg_id lm_id hmdb_id metlin_id aspergillus_web_name knapsack_id biological_activity mesh_nomenclature iupac_classification inchi inchi_key smiles category main_class sub_class class_level4', text),
+        logP: nullableNumber, ...fields('pc_id chebi_id aspergillus_id npatlas_id oh_position num_chains number_carbons double_bonds', nullableInt),
+        ...fields('reactions classyfire_classification ontology_terms references organisms', arr(legacyLink)), ...legacyDates}),
+      legacyClassyfire: obj({node_id: {type: 'string', pattern: '^\\d{7}$'}, node_name: text,
+        ...fields('kingdom super_class main_class sub_class direct_parent level_7 level_8 level_9 level_10 level_11', text), ...legacyDates}),
+      legacyOntology: obj({ontology_term_id: id, ...fields('term definition external_id external_source ontology_comment curator', text), parent_id: nullableInt, ontology_level: nullableInt, ...legacyDates}),
+      legacyReference: obj({reference_id: id, ...fields('reference_text doi link', text), compounds: arr(legacyLink), organisms: arr(legacyLink), ...legacyDates}),
+      legacyOrganism: obj({organism_id: id, organism_name: text, parent_id: nullableInt, organism_level: nullableInt,
+        organism_hierarchy: arr(obj({id: str, name: text, number: nullableInt})), compounds: arr(legacyLink), references: arr(legacyLink), ...legacyDates}),
+      problem: obj({type: str, title: str, status: {type: 'integer', minimum: 400, maximum: 499}, detail: str, instance: str}, ['type', 'title', 'status', 'detail'])
+    };
+
+
+    test('Response has JSON content type', () => {
+      expect(res.getHeader('content-type')).to.match(/application\/(?:problem\+)?json\b/i);
+    });
+    test('Response contract: ' + contractName, () => {
+      expect(schemas).to.have.property(contractName);
+      const result = tv4.validateMultiple(res.getBody(), schemas[contractName]);
+      const errors = result.errors.map(error => error.dataPath + ': ' + error.message).join('\n');
+      expect(result.missing, 'All schema references are available').to.be.empty;
+      expect(result.valid, errors).to.equal(true);
+    });
+    if (contractName === 'problem') {
+      test('Problem status agrees with HTTP status', () => {
+        expect(res.getBody().status).to.equal(res.getStatus());
+      });
+    }
+  }
+}

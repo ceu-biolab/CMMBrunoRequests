@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
   "CIDEnergy": "MED",
   "precursorIonMZ": 287.236,
   "tolerancePrecursorIon": 10.0,
@@ -192,5 +192,18 @@ body:json {
   },
   "scoreType": "COSINE",
   "spectrumSource": "ALL"
+  }
 }
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: msms
+}
+
+assert {
+  res.status: eq 200
 }

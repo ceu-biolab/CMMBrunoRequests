@@ -1,0 +1,33 @@
+meta {
+  name: advancedsearch: empty payload
+  type: http
+  seq: 195
+}
+
+post {
+  url: {{base_url}}/api/advancedsearch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

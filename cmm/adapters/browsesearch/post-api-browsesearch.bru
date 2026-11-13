@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "name": "choline",
     "exactName": false,
     "formula": "C5H14NO",
@@ -25,4 +25,17 @@ body:json {
     ],
     "metabolites_type": "all-except-peptides"
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyBrowse
+}
+
+assert {
+  res.status: eq 200
 }

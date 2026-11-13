@@ -1,0 +1,25 @@
+meta {
+  name: references detail
+  type: http
+  seq: 137
+}
+
+get {
+  url: {{base_url}}/api/references/1
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: reference
+}
+
+assert {
+  res.status: eq 200
+  res.body.referenceId: eq 1
+}

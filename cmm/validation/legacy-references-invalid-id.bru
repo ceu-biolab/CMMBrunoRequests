@@ -1,0 +1,24 @@
+meta {
+  name: references: invalid ID
+  type: http
+  seq: 153
+}
+
+get {
+  url: {{base_url}}/api/v3/references/0
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

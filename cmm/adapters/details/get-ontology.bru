@@ -1,0 +1,25 @@
+meta {
+  name: Legacy ontology detail
+  type: http
+  seq: 149
+}
+
+get {
+  url: {{base_url}}/api/v3/ontology/7659
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyOntology
+}
+
+assert {
+  res.status: eq 200
+  res.body.ontology_term_id: eq 7659
+}

@@ -1,0 +1,25 @@
+meta {
+  name: ClassyFire CHEMONTID prefix
+  type: http
+  seq: 158
+}
+
+get {
+  url: {{base_url}}/api/classyfire/CHEMONTID:0000152
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: classyfire
+}
+
+assert {
+  res.status: eq 200
+  res.body.nodeId: eq CHEMONTID:0000152
+}

@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "gcmsSpectrumExperimental": {
       "spectrum": [
         {
@@ -101,4 +101,17 @@ body:json {
     "derivatizationMethod": "METHYL_CHLOROFORMATE",
     "columnType": "STANDARD_NON_POLAR"
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: gcms
+}
+
+assert {
+  res.status: eq 200
 }

@@ -1,0 +1,77 @@
+meta {
+  name: Legacy CE-MS rmt2marker
+  type: http
+  seq: 174
+}
+
+post {
+  url: {{base_url}}/api/v3/cesearch/rmt2marker
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "masses": [
+      291.1299,
+      298.098,
+      308.094,
+      316.2488,
+      55.055
+    ],
+    "buffer": "formic-acid-1m-20c",
+    "polarity": "direct",
+    "chemical_alphabet": "CHNOPS",
+    "rmt": [
+      0.85,
+      0.86,
+      1.07,
+      0.93,
+      0.42
+    ],
+    "rmt_tolerance": 10,
+    "rmt_tolerance_mode": "percentage",
+    "rmt_reference": "l-methionine-sulfone",
+    "marker": "L-Methionine sulfone",
+    "marker_time": 14.24,
+    "marker2": "Hippuric acid",
+    "marker2_time": 25.29
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyCeRmt
+}
+
+assert {
+  res.status: eq 200
+  res.body.compounds_found.length: eq 5
+}
+
+tests {
+  test('Legacy rows preserve submitted mass order', () => {
+    const rows = res.getBody().compounds_found;
+    expect(rows.map(row => row.input_mz)).to.deep.equal([291.1299,298.098,308.094,316.2488,55.055]);
+  });
+}

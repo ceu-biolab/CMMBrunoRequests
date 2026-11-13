@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "mzValues": [
       400.3432,
       281.24765
@@ -35,4 +35,27 @@ body:json {
     ],
     "formulaType": "CHNOPS"
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: im
+}
+
+assert {
+  res.status: eq 200
+  res.body.imFeatures.length: eq 2
+}
+
+tests {
+  test('Feature values preserve request order', () => {
+    const rows = res.getBody().imFeatures;
+    const expectedValues = [400.3432,281.24765];
+    expect(rows).to.have.lengthOf(expectedValues.length);
+    rows.forEach((row, i) => expect(row.feature.mzValue).to.be.closeTo(expectedValues[i], 0.0000001));
+  });
 }

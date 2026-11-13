@@ -1,0 +1,25 @@
+meta {
+  name: Legacy organisms detail
+  type: http
+  seq: 155
+}
+
+get {
+  url: {{base_url}}/api/v3/organisms/3
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyOrganism
+}
+
+assert {
+  res.status: eq 200
+  res.body.organism_id: eq 3
+}

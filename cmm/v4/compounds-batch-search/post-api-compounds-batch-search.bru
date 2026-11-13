@@ -46,6 +46,26 @@ body:json {
   }
 }
 
+
+settings {
+  timeout: 60000
+}
+
 vars:pre-request {
   base_url: https://ceumassdev.eps.uspceu.es
+  cmm_response_contract: ms
+}
+
+assert {
+  res.status: eq 200
+  res.body.msfeatures.length: eq 2
+}
+
+tests {
+  test('Feature values preserve request order', () => {
+    const rows = res.getBody().msfeatures;
+    const expectedValues = [757.5667,776.5667];
+    expect(rows).to.have.lengthOf(expectedValues.length);
+    rows.forEach((row, i) => expect(row.feature.mzValue).to.be.closeTo(expectedValues[i], 0.0000001));
+  });
 }

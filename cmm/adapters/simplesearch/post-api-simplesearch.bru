@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "mass": 757.5667,
     "tolerance": 10.0,
     "tolerance_mode": "ppm",
@@ -34,4 +34,17 @@ body:json {
       "all-except-mine"
     ]
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyMs
+}
+
+assert {
+  res.status: eq 200
 }

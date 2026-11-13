@@ -1,0 +1,25 @@
+meta {
+  name: organisms detail
+  type: http
+  seq: 140
+}
+
+get {
+  url: {{base_url}}/api/organisms/3
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: organism
+}
+
+assert {
+  res.status: eq 200
+  res.body.organismId: eq 3
+}

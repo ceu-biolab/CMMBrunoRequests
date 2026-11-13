@@ -1,0 +1,72 @@
+meta {
+  name: Legacy CE-MS effmob
+  type: http
+  seq: 169
+}
+
+post {
+  url: {{base_url}}/api/v3/cesearch/effmob
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "masses": [
+      291.1299,
+      298.098,
+      308.094,
+      316.2488,
+      55.055
+    ],
+    "buffer": "formic-acid-1m-20c",
+    "polarity": "direct",
+    "chemical_alphabet": "CHNOPS",
+    "effective_mobilities": [
+      1174,
+      1060,
+      646,
+      931,
+      3192
+    ],
+    "eff_mob_tolerance": 10,
+    "eff_mob_tolerance_mode": "percentage"
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyCeEffmob
+}
+
+assert {
+  res.status: eq 200
+  res.body.compounds_found.length: eq 5
+}
+
+tests {
+  test('Legacy rows preserve submitted mass order', () => {
+    const rows = res.getBody().compounds_found;
+    expect(rows.map(row => row.input_mz)).to.deep.equal([291.1299,298.098,308.094,316.2488,55.055]);
+  });
+}

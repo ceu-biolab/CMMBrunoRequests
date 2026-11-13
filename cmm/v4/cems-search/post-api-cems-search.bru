@@ -15,7 +15,7 @@ headers {
 }
 
 body:json {
-{
+  {
     "mz_values": [
       291.1299,
       298.098,
@@ -47,4 +47,27 @@ body:json {
       "[M+NH4]+"
     ]
   }
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: ce
+}
+
+assert {
+  res.status: eq 200
+  res.body.ceFeatures.length: eq 5
+}
+
+tests {
+  test('Feature values preserve request order', () => {
+    const rows = res.getBody().ceFeatures;
+    const expectedValues = [291.1299,298.098,308.094,316.2488,55.055];
+    expect(rows).to.have.lengthOf(expectedValues.length);
+    rows.forEach((row, i) => expect(row.feature.mzValue).to.be.closeTo(expectedValues[i], 0.0000001));
+  });
 }

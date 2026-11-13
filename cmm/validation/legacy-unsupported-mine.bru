@@ -1,0 +1,46 @@
+meta {
+  name: Legacy unsupported-mine
+  type: http
+  seq: 204
+}
+
+post {
+  url: {{base_url}}/api/simplesearch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "mass": 181.070664
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

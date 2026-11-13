@@ -1,0 +1,26 @@
+meta {
+  name: Legacy compounds detail
+  type: http
+  seq: 143
+}
+
+get {
+  url: {{base_url}}/api/v3/compounds/257
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyCompound
+}
+
+assert {
+  res.status: eq 200
+  res.body.references: isNotEmpty
+  res.body.identifier: eq 257
+}

@@ -1,0 +1,26 @@
+meta {
+  name: compounds detail
+  type: http
+  seq: 128
+}
+
+get {
+  url: {{base_url}}/api/compounds/257
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: compoundDetails
+}
+
+assert {
+  res.status: eq 200
+  res.body.references: isNotEmpty
+  res.body.compoundId: eq 257
+}

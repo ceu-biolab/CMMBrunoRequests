@@ -1,0 +1,24 @@
+meta {
+  name: classyfire: invalid ID
+  type: http
+  seq: 132
+}
+
+get {
+  url: {{base_url}}/api/classyfire/invalid
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 400
+}

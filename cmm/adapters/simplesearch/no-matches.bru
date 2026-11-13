@@ -1,0 +1,47 @@
+meta {
+  name: Legacy search without matches
+  type: http
+  seq: 164
+}
+
+post {
+  url: {{base_url}}/api/simplesearch
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "tolerance": 10,
+    "tolerance_mode": "ppm",
+    "ion_mode": "positive",
+    "masses_mode": "mz",
+    "adducts": [
+      "M+H"
+    ],
+    "databases": [
+      "all-except-mine"
+    ],
+    "metabolites_type": "all-except-peptides",
+    "mass": 1.1
+  }
+
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: legacyMs
+}
+
+assert {
+  res.status: eq 200
+  res.body.results: isEmpty
+}

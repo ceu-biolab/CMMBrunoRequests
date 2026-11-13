@@ -1,0 +1,24 @@
+meta {
+  name: compounds: absent ID
+  type: http
+  seq: 130
+}
+
+get {
+  url: {{base_url}}/api/compounds/2147483647
+  body: none
+  auth: none
+}
+
+
+settings {
+  timeout: 60000
+}
+
+vars:pre-request {
+  cmm_response_contract: problem
+}
+
+assert {
+  res.status: eq 404
+}
